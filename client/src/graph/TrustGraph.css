@@ -1,0 +1,1023 @@
+/* =========================================================
+   AURA — Trust Graph
+   Advanced React Flow UI
+   Scoped to .trust-graph-section / .react-flow
+   ========================================================= */
+
+/* =========================================================
+   ROOT / CONTAINER
+   ========================================================= */
+
+.trust-graph-section {
+  position: relative;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.015);
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.trust-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 68px;
+  padding: 14px 18px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.018),
+      transparent
+    );
+  border-bottom: 1px solid var(--border);
+}
+
+.trust-title {
+  min-width: 0;
+}
+
+.trust-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow:
+    0 0 0 3px rgba(34, 211, 238, 0.08),
+    0 0 12px rgba(34, 211, 238, 0.35);
+}
+
+.trust-title h2 {
+  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.trust-title p {
+  margin-top: 3px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-2);
+}
+
+/* =========================================================
+   STATS
+   ========================================================= */
+
+.trust-stats {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  flex: none;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: rgba(255, 255, 255, 0.012);
+}
+
+.trust-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 82px;
+  padding: 8px 12px;
+}
+
+.trust-stat + .trust-stat {
+  border-left: 1px solid var(--border);
+}
+
+.trust-stat strong {
+  font-size: 15px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.trust-stat span {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+/* =========================================================
+   TOOLBAR
+   ========================================================= */
+
+.trust-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 43px;
+  padding: 7px 18px;
+  background: rgba(7, 12, 19, 0.42);
+  border-bottom: 1px solid var(--border);
+}
+
+.trust-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+}
+
+.trust-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  white-space: nowrap;
+  color: var(--text-2);
+}
+
+.legend-dot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 2px;
+  background: var(--text-3);
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.05);
+}
+
+.legend-dot.suspicious {
+  background: var(--danger);
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.08);
+}
+
+.legend-dot.unverified {
+  background: var(--warning);
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.08);
+}
+
+.legend-dot.verified {
+  background: var(--success);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.08);
+}
+
+.legend-line {
+  width: 17px;
+  height: 0;
+  border-top: 1px dashed var(--cyan);
+}
+
+.graph-hint {
+  flex: none;
+  font-size: 11px;
+  white-space: nowrap;
+  color: var(--text-3);
+}
+
+/* =========================================================
+   CANVAS
+   ========================================================= */
+
+.trust-canvas {
+  position: relative;
+  height: clamp(520px, calc(100vh - 330px), 720px);
+  min-height: 480px;
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(34, 211, 238, 0.025),
+      transparent 48%
+    ),
+    var(--bg);
+}
+
+/*
+ * React Flow itself
+ */
+
+.trust-canvas .react-flow {
+  background: transparent;
+
+  --xy-edge-stroke-default: #304359;
+  --xy-edge-stroke-selected-default: var(--cyan);
+  --xy-edge-stroke-width-default: 1.4px;
+}
+
+/* =========================================================
+   GRAPH COLUMN LABELS
+   ========================================================= */
+
+.graph-columns {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 5;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  height: 30px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 26, 0.96),
+      rgba(10, 17, 26, 0.82)
+    );
+
+  border-bottom: 1px solid var(--border);
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+}
+
+.graph-columns span {
+  display: grid;
+  place-items: center;
+
+  font-size: 9.5px;
+  font-weight: 650;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+
+  color: var(--text-3);
+}
+
+.graph-columns span + span {
+  border-left: 1px solid var(--border);
+}
+
+/* =========================================================
+   REACT FLOW EDGES
+   ========================================================= */
+
+.trust-canvas .react-flow__edge-path {
+  stroke: #34485d;
+  stroke-width: 1.35;
+  transition:
+    stroke 160ms ease,
+    stroke-width 160ms ease,
+    opacity 160ms ease;
+}
+
+.trust-canvas
+  .react-flow__edge.animated
+  .react-flow__edge-path {
+  stroke: var(--cyan);
+  stroke-width: 1.5;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 3px rgba(34, 211, 238, 0.18));
+}
+
+.trust-canvas
+  .react-flow__edge.selected
+  .react-flow__edge-path {
+  stroke: var(--cyan);
+  stroke-width: 1.8;
+}
+
+.trust-canvas .react-flow__edge-text {
+  font-family: var(--font);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  fill: var(--text-2);
+}
+
+.trust-canvas .react-flow__edge-textbg {
+  fill: var(--panel);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+/* =========================================================
+   HANDLES
+   ========================================================= */
+
+.trust-canvas .react-flow__handle {
+  width: 8px;
+  height: 8px;
+
+  background: var(--panel);
+  border: 1.5px solid #49627b;
+  border-radius: 50%;
+
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.trust-canvas
+  .react-flow__handle.connectingfrom,
+.trust-canvas
+  .react-flow__node:hover
+  .react-flow__handle {
+  background: var(--cyan);
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
+}
+
+.trust-canvas
+  .react-flow__handle:hover {
+  transform: scale(1.2);
+  border-color: var(--cyan);
+}
+
+/* =========================================================
+   REACT FLOW CONTROLS
+   ========================================================= */
+
+.trust-canvas .react-flow__controls {
+  overflow: hidden;
+  margin: 12px;
+
+  background: rgba(13, 20, 30, 0.94);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r);
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.015);
+
+  backdrop-filter: blur(10px);
+}
+
+.trust-canvas .react-flow__controls-button {
+  display: grid;
+  place-items: center;
+
+  width: 30px;
+  height: 30px;
+
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+
+  color: var(--text-2);
+
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.trust-canvas
+  .react-flow__controls-button:last-child {
+  border-bottom: 0;
+}
+
+.trust-canvas
+  .react-flow__controls-button:hover {
+  background: var(--panel-2);
+  color: var(--cyan);
+}
+
+.trust-canvas
+  .react-flow__controls-button svg {
+  width: 13px;
+  height: 13px;
+  max-width: 13px;
+  max-height: 13px;
+  fill: currentColor;
+}
+
+/* =========================================================
+   MINIMAP
+   ========================================================= */
+
+.trust-canvas .react-flow__minimap {
+  margin: 12px;
+  overflow: hidden;
+
+  background: rgba(13, 20, 30, 0.94);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r);
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.trust-canvas .react-flow__minimap-mask {
+  fill: rgba(34, 211, 238, 0.04);
+}
+
+.trust-canvas .react-flow__attribution {
+  background: transparent;
+}
+
+.trust-canvas .react-flow__attribution a {
+  color: var(--text-3);
+}
+
+/* =========================================================
+   TRUST NODES
+   ========================================================= */
+
+.trust-node {
+  --accent: var(--blue);
+
+  position: relative;
+
+  width: 232px;
+  min-height: 70px;
+  max-height: 112px;
+
+  overflow: hidden;
+
+  padding: 10px 12px 10px 15px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.018),
+      transparent 65%
+    ),
+    var(--panel);
+
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r);
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 16px rgba(0, 0, 0, 0.12);
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.trust-node::before {
+  content: "";
+
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+
+  width: 3px;
+
+  background: var(--accent);
+  box-shadow: 0 0 10px color-mix(
+    in srgb,
+    var(--accent) 28%,
+    transparent
+  );
+}
+
+.trust-node:hover {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.028),
+      transparent 65%
+    ),
+    var(--panel-2);
+
+  border-color: color-mix(
+    in srgb,
+    var(--accent) 55%,
+    var(--border-strong)
+  );
+
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.2),
+    0 0 0 1px color-mix(
+      in srgb,
+      var(--accent) 8%,
+      transparent
+    );
+}
+
+.react-flow__node.selected .trust-node {
+  border-color: var(--accent);
+
+  box-shadow:
+    0 0 0 3px color-mix(
+      in srgb,
+      var(--accent) 13%,
+      transparent
+    ),
+    0 8px 26px rgba(0, 0, 0, 0.22);
+}
+
+/* =========================================================
+   NODE TYPES
+   ========================================================= */
+
+.trust-node.claim {
+  --accent: var(--blue);
+  max-height: 136px;
+}
+
+.trust-node.claim.suspicious {
+  --accent: var(--danger);
+}
+
+.trust-node.claim.unverified {
+  --accent: var(--warning);
+}
+
+.trust-node.claim.verified {
+  --accent: var(--success);
+}
+
+.trust-node.evidence {
+  --accent: var(--indigo);
+  width: 244px;
+}
+
+.trust-node.source {
+  --accent: var(--cyan);
+  width: 198px;
+}
+
+/* =========================================================
+   NODE CONTENT
+   ========================================================= */
+
+.node-category {
+  margin-bottom: 4px;
+
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+
+  color: var(--accent);
+}
+
+.node-label {
+  display: -webkit-box;
+  overflow: hidden;
+
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.4;
+
+  color: var(--text);
+
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.trust-node.evidence .node-label {
+  -webkit-line-clamp: 2;
+}
+
+.node-detail {
+  display: -webkit-box;
+  overflow: hidden;
+
+  margin-top: 3px;
+
+  font-size: 10.5px;
+  line-height: 1.4;
+
+  color: var(--text-2);
+
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+/* =========================================================
+   NODE STATUS
+   ========================================================= */
+
+.node-status,
+.node-strength {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-top: 7px;
+
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  color: var(--text-2);
+}
+
+.status-indicator {
+  width: 6px;
+  height: 6px;
+  flex: none;
+
+  border-radius: 50%;
+  background: var(--accent);
+
+  box-shadow:
+    0 0 0 2px color-mix(
+      in srgb,
+      var(--accent) 10%,
+      transparent
+    );
+}
+
+.node-strength span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-3);
+}
+
+.trust-node.evidence.high .node-strength span {
+  background: var(--cyan);
+}
+
+.trust-node.evidence.medium .node-strength span {
+  background: var(--indigo);
+}
+
+.trust-node.evidence.low .node-strength span {
+  background: var(--text-3);
+}
+
+/* =========================================================
+   INSPECTOR
+   ========================================================= */
+
+.node-inspector {
+  position: absolute;
+  top: 42px;
+  right: 12px;
+  z-index: 10;
+
+  width: 270px;
+  max-height: calc(100% - 56px);
+
+  overflow-y: auto;
+
+  padding: 15px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.025),
+      transparent 60%
+    ),
+    rgba(13, 20, 30, 0.97);
+
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-lg);
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.015);
+
+  backdrop-filter: blur(14px);
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.node-inspector::-webkit-scrollbar {
+  width: 5px;
+}
+
+.node-inspector::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.node-inspector::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
+
+/* =========================================================
+   INSPECTOR HEADER
+   ========================================================= */
+
+.inspector-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.inspector-header > div {
+  min-width: 0;
+}
+
+.inspector-header span {
+  font-size: 9.5px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.inspector-header h3 {
+  margin-top: 4px;
+
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.4;
+
+  color: var(--text);
+
+  overflow-wrap: anywhere;
+}
+
+.inspector-header button {
+  display: grid;
+  place-items: center;
+
+  flex: none;
+
+  width: 25px;
+  height: 25px;
+
+  margin: -2px -3px 0 0;
+
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+
+  font-size: 17px;
+  line-height: 1;
+
+  color: var(--text-3);
+
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.inspector-header button:hover {
+  background: rgba(148, 163, 184, 0.08);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+/* =========================================================
+   INSPECTOR TYPE
+   ========================================================= */
+
+.inspector-type {
+  display: inline-flex;
+  align-items: center;
+
+  margin: 11px 0 5px;
+  padding: 3px 8px;
+
+  background: rgba(34, 211, 238, 0.045);
+
+  border: 1px solid rgba(34, 211, 238, 0.16);
+  border-radius: var(--r-sm);
+
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  color: var(--cyan);
+}
+
+/* =========================================================
+   INSPECTOR ROWS
+   ========================================================= */
+
+.inspector-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+
+  padding: 8px 0;
+
+  border-bottom: 1px solid var(--border);
+
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.inspector-row span {
+  flex: none;
+  color: var(--text-3);
+}
+
+.inspector-row strong {
+  max-width: 62%;
+
+  font-weight: 550;
+  text-align: right;
+  overflow-wrap: anywhere;
+
+  color: var(--text);
+}
+
+/* =========================================================
+   INSPECTOR DETAIL
+   ========================================================= */
+
+.inspector-detail {
+  padding-top: 11px;
+}
+
+.inspector-detail span {
+  font-size: 9.5px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  color: var(--text-3);
+}
+
+.inspector-detail p {
+  margin-top: 5px;
+
+  font-size: 11.5px;
+  line-height: 1.6;
+
+  color: var(--text-2);
+}
+
+/* =========================================================
+   RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .trust-header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .trust-stats {
+    width: 100%;
+  }
+
+  .trust-stat {
+    flex: 1;
+  }
+
+  .trust-toolbar {
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .trust-graph-section {
+    border-radius: var(--r);
+  }
+
+  .trust-header {
+    gap: 14px;
+    padding: 13px 14px;
+  }
+
+  .trust-title h2 {
+    font-size: 15px;
+  }
+
+  .trust-title p {
+    font-size: 11px;
+  }
+
+  .trust-stats {
+    width: 100%;
+  }
+
+  .trust-stat {
+    min-width: 0;
+    padding: 7px 9px;
+  }
+
+  .trust-stat strong {
+    font-size: 14px;
+  }
+
+  .trust-stat span {
+    font-size: 10px;
+  }
+
+  .trust-toolbar {
+    padding: 8px 12px;
+  }
+
+  .trust-legend {
+    gap: 6px 12px;
+  }
+
+  .trust-legend span {
+    font-size: 10px;
+  }
+
+  .graph-hint {
+    display: none;
+  }
+
+  .trust-canvas {
+    height: 520px;
+    min-height: 520px;
+  }
+
+  .graph-columns {
+    height: 27px;
+  }
+
+  .graph-columns span {
+    font-size: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  .trust-canvas .react-flow__minimap {
+    display: none;
+  }
+
+  .trust-canvas .react-flow__controls {
+    margin: 8px;
+  }
+
+  .trust-canvas .react-flow__controls-button {
+    width: 28px;
+    height: 28px;
+  }
+
+  .node-inspector {
+    top: auto;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+
+    width: auto;
+    max-height: 44%;
+
+    padding: 12px;
+  }
+
+  .inspector-row {
+    font-size: 11px;
+  }
+
+  .inspector-detail p {
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+  .trust-header {
+    padding: 12px;
+  }
+
+  .trust-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trust-stat:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+
+  .trust-stat + .trust-stat {
+    border-left: 0;
+  }
+
+  .trust-stat:nth-child(even) {
+    border-left: 1px solid var(--border);
+  }
+
+  .trust-stat:nth-child(3) {
+    border-top: 1px solid var(--border);
+  }
+
+  .trust-toolbar {
+    padding: 8px 10px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .trust-node,
+  .trust-canvas .react-flow__edge-path,
+  .trust-canvas .react-flow__handle,
+  .trust-canvas .react-flow__controls-button,
+  .inspector-header button {
+    transition: none;
+  }
+}
