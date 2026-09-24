@@ -52,7 +52,8 @@ const PORT = Number(process.env.PORT) || 5000;
 const allowedOrigins = [
   process.env.CLIENT_URL,
   "http://localhost:5173",
-  "http://localhost:3000"
+  "http://localhost:3000",
+  "https://aura-d14y.onrender.com"
 ].filter(Boolean);
 
 console.log(
