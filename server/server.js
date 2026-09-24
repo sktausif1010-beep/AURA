@@ -49,10 +49,21 @@ const PORT = Number(process.env.PORT) || 5000;
 // CORS
 // ==================================================
 
+const normalizeOrigin = (value) => {
+  if (!value) return null;
+
+  return String(value)
+    .trim()
+    .replace(/\/+$/, "");
+};
+
 const allowedOrigins = [
-  process.env.CLIENT_URL,
+  normalizeOrigin(process.env.CLIENT_URL),
+
   "http://localhost:5173",
   "http://localhost:3000",
+
+  // Production frontend
   "https://aura-d14y.onrender.com"
 ].filter(Boolean);
 
@@ -61,32 +72,61 @@ console.log(
   allowedOrigins
 );
 
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Requests without an Origin header are allowed.
+    // Useful for health checks and server-to-server requests.
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    const normalizedOrigin =
+      normalizeOrigin(origin);
+
+    if (
+      allowedOrigins.includes(
+        normalizedOrigin
+      )
+    ) {
+      console.log(
+        "AURA CORS: allowed origin:",
+        normalizedOrigin
+      );
+
+      return callback(null, true);
+    }
+
+    console.warn(
+      "AURA CORS: blocked origin:",
+      origin
+    );
+
+    return callback(
+      new Error("Not allowed by CORS")
+    );
+  },
+
+  credentials: true,
+
+  methods: [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS"
+  ],
+
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization"
+  ],
+
+  optionsSuccessStatus: 204
+};
+
 app.use(
-  cors({
-    origin: (origin, callback) => {
-
-      // Allow requests without Origin.
-      // Useful for health checks and server-to-server calls.
-      if (!origin) {
-        return callback(null, true);
-      }
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      console.warn(
-        "AURA CORS: blocked origin:",
-        origin
-      );
-
-      return callback(
-        new Error("Not allowed by CORS")
-      );
-    },
-
-    credentials: true
-  })
+  cors(corsOptions)
 );
 
 // ==================================================
@@ -144,7 +184,8 @@ app.get(
 
       return res.status(500).json({
         success: false,
-        message: "Could not retrieve user."
+        message:
+          "Could not retrieve user."
       });
     }
   }
@@ -374,9 +415,6 @@ function buildInvestigationData({
 }) {
 
   return {
-
-    // Every investigation belongs
-    // to the authenticated user.
 
     userId,
 
