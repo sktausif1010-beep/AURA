@@ -10,6 +10,9 @@ import auraLogo from "../assets/aura-logo.png";
 
 import "../styles/auth.css";
 
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 export default function Register({
   setPage,
   onRegister
@@ -72,7 +75,7 @@ export default function Register({
 
       const response =
         await fetch(
-          "http://localhost:5000/api/auth/register",
+          `${API_URL}/api/auth/register`,
           {
             method: "POST",
 
